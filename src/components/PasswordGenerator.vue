@@ -9,8 +9,11 @@ export default {
     name: 'PasswordGenerator',
     data() {
         return {
-            clicks: 0
+            
         }
+    },
+    methods: {
+
     }
 }
 </script>
@@ -18,5 +21,6 @@ export default {
 <style lang="scss" scoped>
 .password-generator {
     font-size: 2rem;
+    background-color: red;
 }
 </style>
