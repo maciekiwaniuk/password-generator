@@ -2,31 +2,62 @@
     <div class="password-generator">
 
         <div class="row">
-            Amount <input type="number" v-model="amountOfCharacters">
+            Amount
+            <input
+                type="number" 
+                @input="saveOptionToLocalStorage('amountOfCharacters', amountOfCharacters);" 
+                v-model="amountOfCharacters"
+            >
         </div>
 
         <div class="row">
-            Symbols <input type="checkbox" v-model="symbols">
+            Symbols
+            <input 
+                type="checkbox" 
+                @change="saveOptionToLocalStorage('symbols', symbols);" 
+                v-model="symbols"
+            >
         </div>
 
         <div class="row">
-            Digits <input type="checkbox" v-model="digits">
+            Digits 
+            <input 
+                type="checkbox" 
+                @change="saveOptionToLocalStorage('digits', digits);" 
+                v-model="digits"
+            >
         </div>
 
         <div class="row">
-            Small letters <input type="checkbox" v-model="smallLetters">
+            Small letters
+            <input 
+                type="checkbox" 
+                @change="saveOptionToLocalStorage('smallLetters', smallLetters);" 
+                v-model="smallLetters"
+            >
         </div>
 
         <div class="row">
-            Big letters <input type="checkbox" v-model="bigLetters">
+            Big letters
+            <input 
+                type="checkbox" 
+                @change="saveOptionToLocalStorage('bigLetters', bigLetters);" 
+                v-model="bigLetters"
+            >
         </div>
 
         <div class="row">
-            Generated password: <input type="text" class="generatedPassword" v-model="generatedPassword" disabled>
+            Generated password:
+            <input 
+                type="text" 
+                class="generatedPassword" 
+                v-model="generatedPassword" 
+                disabled
+            >
         </div>
 
         <div class="row">
-            <button class="generateButton" @click="regeneratePassword(); getSymbols();">Generate</button>
+            <button class="generateButton" @click="regeneratePassword();">Generate</button>
         </div>
 
     </div>
@@ -37,16 +68,16 @@ export default {
     name: 'PasswordGenerator',
     data() {
         return {
-            amountOfCharacters: 6,
-            symbols: true,
-            digits: true,
-            smallLetters: true,
-            bigLetters: true
+            amountOfCharacters: localStorage.getItem('amountOfCharacters') ?? 6,
+            symbols: localStorage.getItem('symbols') ?? true,
+            digits: localStorage.getItem('digits') ?? true,
+            smallLetters: localStorage.getItem('smallLetters') ?? true,
+            bigLetters: localStorage.getItem('bigLetters') ?? true
         }
     },
     methods: {
         /**
-         * Return symbols as string
+         * Returns symbols as string
          */
         getSymbols() {
             // specials chars in ascii - (from -> to)
@@ -91,6 +122,12 @@ export default {
         regeneratePassword() {
             this.amountOfCharacters -= 1;
             this.amountOfCharacters += 1;
+        },
+        /**
+         * Saves selected option to local storage
+         */
+        saveOptionToLocalStorage(name, value) {
+            localStorage.setItem(name, value);
         }
     },
     computed: {
@@ -100,8 +137,8 @@ export default {
 
             if (this.symbols) characters += `${this.getSymbols()}`;
             if (this.digits) characters += `${this.getDigits()}`;
-            if (this.smallLetters) characters = `${this.getSmallLetters()}`;
-            if (this.bigLetters) characters = `${this.getBigLetters()}`;
+            if (this.smallLetters) characters += `${this.getSmallLetters()}`;
+            if (this.bigLetters) characters += `${this.getBigLetters()}`;
 
             for (let i = 0; i < this.amountOfCharacters; i++) {
                 password += characters.charAt(Math.floor(Math.random() * characters.length));
