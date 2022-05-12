@@ -1,4 +1,4 @@
-# password-generator
+# Password generator
 
 ## Project setup
 ```
@@ -17,3 +17,5 @@ npm run build
 
 ### Customize configuration
 See [Configuration Reference](https://cli.vuejs.org/config/).
+
+# Project is still under development...
