@@ -42,7 +42,7 @@ body {
 
 #app {
     display: grid;
-    grid-auto-rows: 2fr 8fr 0.5fr;
+    grid-auto-rows: 1fr 6fr 0.5fr;
     min-height: 100vh;
     text-align: center;
 
@@ -50,6 +50,7 @@ body {
     width: 100vw;
     margin: 0 0 0 0;
     @media (min-width: 40rem) {
+        grid-auto-rows: 1fr 6fr 0.3fr;
         width: 80vw;
         margin: 0 10vw 0 10vw;
     }

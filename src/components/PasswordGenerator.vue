@@ -47,6 +47,15 @@
         </div>
 
         <div class="row">
+            Exclude similar characters
+            <input 
+                type="checkbox" 
+                @change="saveOptionToLocalStorage('similarCharacters', similarCharacters);" 
+                v-model="similarCharacters"
+            >
+        </div>
+
+        <div class="row">
             Generated password:
             <input 
                 type="text" 
@@ -66,13 +75,23 @@
 <script>
 export default {
     name: 'PasswordGenerator',
+    beforeCreate() {
+        // Creates and saves default value of options to local storage if values weren't set yet
+        if (localStorage.getItem('amountOfCharacters') === null) localStorage.setItem('amountOfCharacters', 6);
+        if (localStorage.getItem('symbols') === null) localStorage.setItem('symbols', true);
+        if (localStorage.getItem('digits') === null) localStorage.setItem('digits', true);
+        if (localStorage.getItem('smallLetters') === null) localStorage.setItem('smallLetters', true);
+        if (localStorage.getItem('bigLetters') === null) localStorage.setItem('bigLetters', true);
+        if (localStorage.getItem('similarCharacters') === null) localStorage.setItem('similarCharacters', false);
+    },
     data() {
         return {
-            amountOfCharacters: localStorage.getItem('amountOfCharacters') ?? 6,
-            symbols: localStorage.getItem('symbols') ?? true,
-            digits: localStorage.getItem('digits') ?? true,
-            smallLetters: localStorage.getItem('smallLetters') ?? true,
-            bigLetters: localStorage.getItem('bigLetters') ?? true
+            amountOfCharacters: localStorage.getItem('amountOfCharacters'),
+            symbols: localStorage.getItem('symbols') == 'true',
+            digits: localStorage.getItem('digits') == 'true',
+            smallLetters: localStorage.getItem('smallLetters') == 'true',
+            bigLetters: localStorage.getItem('bigLetters') == 'true',
+            similarCharacters: localStorage.getItem('similarCharacters') == 'true'
         }
     },
     methods: {
@@ -140,8 +159,19 @@ export default {
             if (this.smallLetters) characters += `${this.getSmallLetters()}`;
             if (this.bigLetters) characters += `${this.getBigLetters()}`;
 
-            for (let i = 0; i < this.amountOfCharacters; i++) {
-                password += characters.charAt(Math.floor(Math.random() * characters.length));
+            let amountOfPossibleUniqueCharacters = characters.length,
+                generatedCharacters = 0;
+
+            while (generatedCharacters != this.amountOfCharacters) {
+                let generatedRandomCharacter = characters.charAt(Math.floor(Math.random() * characters.length));
+
+                // check if excluding similar characters option is selected, password already contains generated character
+                // and selected amount of characters is possible to generate unique characters
+                if (this.similarCharacters &&
+                    password.includes(generatedRandomCharacter) && amountOfPossibleUniqueCharacters >= this.amountOfCharacters) continue;
+
+                generatedCharacters += 1;
+                password += generatedRandomCharacter;
             }
 
             return password;
