@@ -17,7 +17,6 @@ export default {
     align-items: center;
     font-size: 1.8rem;
     font-weight: 700;
-    background-color: orange;
     
     @media (min-width: 40rem) {
         font-size: 2.5rem;

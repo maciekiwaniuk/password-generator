@@ -2,17 +2,19 @@
     <div class="password-generator">
 
         <div class="row">
-            Amount
+            <label for="amountOfCharacters">Amount</label>
             <input
+                class="amount-of-characters-text-field"
                 type="number" 
-                @input="saveOptionToLocalStorage('amountOfCharacters', amountOfCharacters);" 
+                @input="saveOptionToLocalStorage('amountOfCharacters', amountOfCharacters); checkAmountOfCharacters();" 
                 v-model="amountOfCharacters"
             >
         </div>
 
         <div class="row">
-            Symbols
+            <label for="symbols">Symbols</label>
             <input 
+                class="checkbox"
                 type="checkbox" 
                 @change="saveOptionToLocalStorage('symbols', symbols);" 
                 v-model="symbols"
@@ -20,8 +22,9 @@
         </div>
 
         <div class="row">
-            Digits 
+            <label for="digits">Digits</label>
             <input 
+                class="checkbox"
                 type="checkbox" 
                 @change="saveOptionToLocalStorage('digits', digits);" 
                 v-model="digits"
@@ -29,8 +32,9 @@
         </div>
 
         <div class="row">
-            Small letters
+            <label for="smallLetters">Small letters</label>
             <input 
+                class="checkbox"
                 type="checkbox" 
                 @change="saveOptionToLocalStorage('smallLetters', smallLetters);" 
                 v-model="smallLetters"
@@ -38,8 +42,9 @@
         </div>
 
         <div class="row">
-            Big letters
+            <label for="bigLetters">Big letters</label>
             <input 
+                class="checkbox"
                 type="checkbox" 
                 @change="saveOptionToLocalStorage('bigLetters', bigLetters);" 
                 v-model="bigLetters"
@@ -47,8 +52,9 @@
         </div>
 
         <div class="row">
-            Exclude similar characters
+            <label for="similarCharacters">Exclude similar characters</label>
             <input 
+                class="checkbox"
                 type="checkbox" 
                 @change="saveOptionToLocalStorage('similarCharacters', similarCharacters);" 
                 v-model="similarCharacters"
@@ -56,17 +62,17 @@
         </div>
 
         <div class="row">
-            Generated password:
+            <label for="generatedPassword">Generated password</label>
             <input 
                 type="text" 
-                class="generatedPassword" 
+                class="generated-password" 
                 v-model="generatedPassword" 
                 disabled
             >
         </div>
 
         <div class="row">
-            <button class="generateButton" @click="regeneratePassword();">Generate</button>
+            <button class="generate-button" @click="regeneratePassword();">Generate</button>
         </div>
 
     </div>
@@ -95,6 +101,19 @@ export default {
         }
     },
     methods: {
+        /**
+         * Checks amount of characters
+         */
+        checkAmountOfCharacters() {
+            if (this.amountOfCharacters > 1000) {
+                this.amountOfCharacters = 1000
+
+                this.saveOptionToLocalStorage(
+                    'amountOfCharacters',
+                    1000
+                );
+            }
+        },
         /**
          * Returns symbols as string
          */
@@ -183,7 +202,6 @@ export default {
 <style lang="scss" scoped>
 .password-generator {
     font-size: 2rem;
-    background-color: rgb(135, 107, 107);
 
     display: grid;
     grid-auto-columns: 1fr;
@@ -195,26 +213,57 @@ export default {
         align-items: center;
     }
 
-    .generatedPassword {
+    .generated-password {
         width: 13rem;
         height: 3rem;
+        margin-left: 0.2rem;
         font-size: 1.2rem;
         color: black;
     }
 
-    .generateButton {
+    .generate-button {
         width: 14rem;
         height: 4rem;
         font-size: 1.6rem;
         font-weight: 700;
-        border-radius: 15px;
-        border: solid black 2px;
+        border-radius: 1.5rem;
+
+        border: solid black 0.2rem;;
         background-color: white;
         color: black;
+
+        transition: ease color 0.7s,
+                    ease background-color 0.7s,
+                    ease border 0.7s;
     }
-    .generateButton:hover {
+    .generate-button:hover {
         cursor: pointer;
-        background-color: rgb(240, 233, 206);
+
+        color: white;
+        background-color: black;
+        border: solid white 0.2rem;
+
+        transition: ease color 0.7s,
+                    ease background-color 0.7s,
+                    ease border 0.7s;
+    }
+
+    .checkbox {
+        margin-left: 0.3rem;
+        margin-top: 0.3rem;
+        width: 1.1rem;
+        height: 1.1rem;
+    }
+    .checkbox:hover {
+        cursor: pointer;
+    }
+    
+    .amount-of-characters-text-field {
+        width: 5rem;
+        height: 1.5rem;
+        margin-top: 0.2rem;
+        margin-left: 0.2rem;
+        font-size: 1.3rem;
     }
 
 }

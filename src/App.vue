@@ -23,7 +23,9 @@ export default {
 @import url('https://fonts.googleapis.com/css2?family=Montserrat:wght@100;300;700&display=swap');
 
 /** variables **/
-$background-color: rgb(219, 217, 186);
+$background-color: black;
+$border-color: white;
+$app-bg-color: rgb(124, 111, 217);
 
 /** set default font-size to 62,5% so 1rem = 10px **/
 * {
@@ -46,6 +48,8 @@ body {
     min-height: 100vh;
     text-align: center;
 
+    background-color: $app-bg-color;
+
     /** Size of app **/
     width: 100vw;
     margin: 0 0 0 0;
@@ -53,6 +57,9 @@ body {
         grid-auto-rows: 1fr 6fr 0.3fr;
         width: 80vw;
         margin: 0 10vw 0 10vw;
+
+        border-left: solid $border-color 0.2rem;
+        border-right: solid $border-color 0.2rem;
     }
     @media (min-width: 60rem) {
         width: 60vw;
