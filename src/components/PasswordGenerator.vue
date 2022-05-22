@@ -67,7 +67,8 @@
                 type="text" 
                 class="generated-password" 
                 v-model="generatedPassword" 
-                disabled
+                @click="copyToClipboard(generatedPassword);"
+                readonly
             >
         </div>
 
@@ -166,6 +167,12 @@ export default {
          */
         saveOptionToLocalStorage(name, value) {
             localStorage.setItem(name, value);
+        },
+        /**
+         * Copies password to clipboard
+         */
+        copyToClipboard(password) {
+            navigator.clipboard.writeText(password);
         }
     },
     computed: {
@@ -218,7 +225,27 @@ export default {
         height: 3rem;
         margin-left: 0.2rem;
         font-size: 1.2rem;
+        padding-left: 0.5rem;
+        border-radius: 1rem;
+
+        border: solid black 0.2rem;;
+        background-color: white;
         color: black;
+
+        transition: ease color 0.7s,
+                    ease background-color 0.7s,
+                    ease border 0.7s;
+    }
+    .generated-password:hover {
+        cursor: pointer;
+
+        color: white;
+        background-color: black;
+        border: solid white 0.2rem;
+
+        transition: ease color 0.7s,
+                    ease background-color 0.7s,
+                    ease border 0.7s;
     }
 
     .generate-button {
@@ -260,10 +287,13 @@ export default {
     
     .amount-of-characters-text-field {
         width: 5rem;
-        height: 1.5rem;
+        height: 1.8rem;
         margin-top: 0.2rem;
         margin-left: 0.2rem;
         font-size: 1.3rem;
+        padding-left: 0.3rem;
+        border-radius: 1rem;
+        border: solid black 0.15rem;
     }
 
 }
