@@ -173,6 +173,12 @@ export default {
          */
         copyToClipboard(password) {
             navigator.clipboard.writeText(password);
+
+            this.$swal({
+                title: 'Password has been copied',
+                icon: 'success',
+                confirmButtonText: 'OK'
+            });
         }
     },
     computed: {
