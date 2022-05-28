@@ -52,12 +52,12 @@
         </div>
 
         <div class="row">
-            <label for="similarCharacters">Exclude similar characters</label>
+            <label for="excludeRepetitions">Exclude repetitions</label>
             <input 
                 class="checkbox"
                 type="checkbox" 
-                @change="saveOptionToLocalStorage('similarCharacters', similarCharacters);" 
-                v-model="similarCharacters"
+                @change="saveOptionToLocalStorage('excludeRepetitions', excludeRepetitions);" 
+                v-model="excludeRepetitions"
             >
         </div>
 
@@ -89,7 +89,7 @@ export default {
         if (localStorage.getItem('digits') === null) localStorage.setItem('digits', true);
         if (localStorage.getItem('smallLetters') === null) localStorage.setItem('smallLetters', true);
         if (localStorage.getItem('bigLetters') === null) localStorage.setItem('bigLetters', true);
-        if (localStorage.getItem('similarCharacters') === null) localStorage.setItem('similarCharacters', false);
+        if (localStorage.getItem('excludeRepetitions') === null) localStorage.setItem('excludeRepetitions', false);
     },
     data() {
         return {
@@ -98,7 +98,7 @@ export default {
             digits: localStorage.getItem('digits') == 'true',
             smallLetters: localStorage.getItem('smallLetters') == 'true',
             bigLetters: localStorage.getItem('bigLetters') == 'true',
-            similarCharacters: localStorage.getItem('similarCharacters') == 'true'
+            excludeRepetitions: localStorage.getItem('excludeRepetitions') == 'true'
         }
     },
     methods: {
@@ -182,25 +182,39 @@ export default {
         }
     },
     computed: {
-        generatedPassword() {
-            let password = '',
-                characters = '';
+        /**
+         * String of characters possible to generate password from
+         */
+        charactersToGeneratePassword() {
+            let characters = '';
 
             if (this.symbols) characters += `${this.getSymbols()}`;
             if (this.digits) characters += `${this.getDigits()}`;
             if (this.smallLetters) characters += `${this.getSmallLetters()}`;
             if (this.bigLetters) characters += `${this.getBigLetters()}`;
 
-            let amountOfPossibleUniqueCharacters = characters.length,
+            return characters;
+        },
+        /**
+         * Possibility to generate password from unique characters
+         */
+        possibilityToGeneratePasswordFromUniqueCharacters() {
+            return this.charactersToGeneratePassword.length >= this.amountOfCharacters
+        },
+        /**
+         * Final generated password
+         */
+        generatedPassword() {
+            let password = '',
                 generatedCharacters = 0;
 
             while (generatedCharacters != this.amountOfCharacters) {
-                let generatedRandomCharacter = characters.charAt(Math.floor(Math.random() * characters.length));
+                let generatedRandomCharacter = this.charactersToGeneratePassword.charAt(Math.floor(Math.random() * this.charactersToGeneratePassword.length));
 
-                // check if excluding similar characters option is selected, password already contains generated character
-                // and selected amount of characters is possible to generate unique characters
-                if (this.similarCharacters &&
-                    password.includes(generatedRandomCharacter) && amountOfPossibleUniqueCharacters >= this.amountOfCharacters) continue;
+                // if (exclude repetitions option is selected) && (password already contains generated character) &&
+                //    (specific amount of characters is possible to generated only from unique characters)
+                if (this.excludeRepetitions &&
+                    password.includes(generatedRandomCharacter) && this.possibilityToGeneratePasswordFromUniqueCharacters) continue;
 
                 generatedCharacters += 1;
                 password += generatedRandomCharacter;
