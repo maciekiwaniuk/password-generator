@@ -51,18 +51,19 @@
             >
         </div>
 
-        <div class="row">
+        <div class="row" :class="{ greyedText: !possibilityToGeneratePasswordFromUniqueCharacters }">
             <label for="excludeRepetitions">Exclude repetitions</label>
             <input 
                 class="checkbox"
                 type="checkbox" 
+                @click="handleExcludeRepetitionsClick($event);"
                 @change="saveOptionToLocalStorage('excludeRepetitions', excludeRepetitions);" 
                 v-model="excludeRepetitions"
             >
         </div>
 
         <div class="row">
-            <label for="generatedPassword">Generated password</label>
+            <label for="generatedPassword">Password</label>
             <input 
                 type="text" 
                 class="generated-password" 
@@ -179,6 +180,15 @@ export default {
                 icon: 'success',
                 confirmButtonText: 'OK'
             });
+        },
+        /**
+         * Handles click on exclude repetitions option
+         */
+        handleExcludeRepetitionsClick(event) {
+            if (!this.possibilityToGeneratePasswordFromUniqueCharacters) {
+                // block possibility to select checkbox
+                event.preventDefault();
+            }
         }
     },
     computed: {
@@ -227,17 +237,32 @@ export default {
 </script>
 
 <style lang="scss" scoped>
+$disabled-color: rgb(182, 179, 179);
+
 .password-generator {
-    font-size: 2rem;
+    font-size: 1.6rem;
 
     display: grid;
     grid-auto-columns: 1fr;
     grid-auto-rows: 1fr;
 
+    @media (min-width: 40rem) {
+        font-size: 2rem;
+    }
+
     .row {
         display: flex;
         justify-content: center;
         align-items: center;
+
+        color: black;
+        transition: ease color 0.7s,
+                    ease font-size 0.2s;
+    }
+    .row:hover {
+        font-size: 110%;
+
+        transition: ease font-size 0.2s;
     }
 
     .generated-password {
@@ -314,6 +339,11 @@ export default {
         padding-left: 0.3rem;
         border-radius: 1rem;
         border: solid black 0.15rem;
+    }
+
+    .greyedText {
+        color: $disabled-color !important;
+        transition: ease color 0.7s;
     }
 
 }
