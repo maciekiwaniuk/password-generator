@@ -74,6 +74,10 @@
         </div>
 
         <div class="row">
+            <PasswordGeneratorStrengthMeter :generatedPassword="generatedPassword"/>
+        </div>
+
+        <div class="row">
             <button class="generate-button" @click="regeneratePassword();">Generate</button>
         </div>
 
@@ -81,8 +85,13 @@
 </template>
 
 <script>
+import PasswordGeneratorStrengthMeter from '@/components/PasswordGeneratorStrengthMeter.vue';
+
 export default {
     name: 'PasswordGenerator',
+    components: {
+        PasswordGeneratorStrengthMeter
+    },  
     beforeCreate() {
         // Creates and saves default value of options to local storage if values weren't set yet
         if (localStorage.getItem('amountOfCharacters') === null) localStorage.setItem('amountOfCharacters', 6);
@@ -272,6 +281,7 @@ $disabled-color: rgb(182, 179, 179);
         font-size: 1.2rem;
         padding-left: 0.5rem;
         border-radius: 1rem;
+        outline: none;
 
         border: solid black 0.2rem;;
         background-color: white;
@@ -343,6 +353,8 @@ $disabled-color: rgb(182, 179, 179);
 
     .greyedText {
         color: $disabled-color !important;
+        text-decoration: line-through;
+
         transition: ease color 0.7s;
     }
 
