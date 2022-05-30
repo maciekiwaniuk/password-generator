@@ -28,5 +28,5 @@ You can now access the server at http://localhost:8000 or http://10.3.10.10:8080
 
 # Application appearance
 
-![](https://github.com/maciekiwaniuk/password-generator/raw/main/src/assets/readme/gifs/gif_1.gif)
+
     
