@@ -20,15 +20,34 @@ export default {
             }
         }
     },
+    watch: {
+        generatedPassword(oldPassword, newPassword) {
+            this.$refs.bar.style.setProperty('--password-strength', this.passwordStrengthValue);
+        }
+    },
     methods: {
+        longerThan8Chars(string) { return string.length > 8; },
+        longerThan16Chars(string) { return string.length > 16 },
 
+        containsDigit(string) {  },
+        containsSymbol(string) {  },
+        containsSmallLetter(string) {  },
+        containsBigLetter(string) {  },
+
+        excludesRepetitions(string) {  },
     },
     computed: {
         /**
-         * Strength of generated password as value (0 - 100)
+         * Strength of generated password as value (0 - 100+)
          */
         passwordStrengthValue() {
-            return Math.floor(Math.random() * 100);
+            let strength = 0;
+
+            if (this.longerThan8Chars(this.generatedPassword)) strength += 10;
+            if (this.longerThan16Chars(this.generatedPassword)) strength += 10;
+
+            if (strength >= 100) return 100;
+            return strength;
         },
         /**
          * Strength of generated password as string
