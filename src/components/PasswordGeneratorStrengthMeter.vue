@@ -10,7 +10,7 @@
 export default {
     name: 'PasswordGeneratorStrengthMeter',
     mounted() {
-        this.$refs.bar.style.setProperty('--password-strength', this.passwordStrengthValue);
+        this.$refs.bar.style.setProperty('--password-strength', this.passwordStrengthTotalValue);
     },
     props: {
         generatedPassword: {
@@ -22,29 +22,57 @@ export default {
     },
     watch: {
         generatedPassword(oldPassword, newPassword) {
-            this.$refs.bar.style.setProperty('--password-strength', this.passwordStrengthValue);
+            this.$refs.bar.style.setProperty('--password-strength', this.passwordStrengthTotalValue);
         }
     },
     methods: {
-        longerThan8Chars(string) { return string.length > 8; },
-        longerThan16Chars(string) { return string.length > 16 },
+        stringLongerThanSpecificNumberOfChars(string, number) { return string.length >= number; },
 
-        containsDigit(string) {  },
-        containsSymbol(string) {  },
-        containsSmallLetter(string) {  },
-        containsBigLetter(string) {  },
+        containsDigit(string) { return string.match(/[\d]+/) },
+        containsSymbol(string) { return string.match(/[!"#$%&'()*+,-./:;<=>?@[\]^_`{|}~]+/) },
+        containsSmallLetter(string) { return string.match(/[a-z]+/) },
+        containsBigLetter(string) { return string.match(/[A-Z]+/) },
 
-        excludesRepetitions(string) {  },
+        excludesRepetitions(string) { 
+            let chars = '';
+
+            for (let i = 0; i <= string.length; i++) {
+                if (chars.includes(string[i])) return false;
+                chars += string[i];
+            }
+
+            return true;
+        },
     },
     computed: {
         /**
+         * Strength of generated password's length
+         */
+        passwordStrengthOfLength() {
+            return Math.round((this.generatedPassword.length / 4) * 5);
+        },
+        /**
+         * Strength of generated password's containing specific characters
+         */
+        passwordStrengthOfContainingSpecificCharacters() {
+            let strength = 0;
+            if (this.containsDigit(this.generatedPassword)) strength += 5;
+            if (this.containsSymbol(this.generatedPassword)) strength += 5;
+            if (this.containsSmallLetter(this.generatedPassword)) strength += 5;
+            if (this.containsBigLetter(this.generatedPassword)) strength += 5;
+            return strength;
+        },
+        /**
          * Strength of generated password as value (0 - 100+)
          */
-        passwordStrengthValue() {
-            let strength = 0;
+        passwordStrengthTotalValue() {
+            let strength = 0,
+                passwordLength = this.generatedPassword.length;
 
-            if (this.longerThan8Chars(this.generatedPassword)) strength += 10;
-            if (this.longerThan16Chars(this.generatedPassword)) strength += 10;
+            strength += this.passwordStrengthOfLength;
+            strength += this.passwordStrengthOfContainingSpecificCharacters;
+
+            if (passwordLength >= 8 && this.excludesRepetitions(this.generatedPassword)) strength += 10;
 
             if (strength >= 100) return 100;
             return strength;
@@ -53,7 +81,7 @@ export default {
          * Strength of generated password as string
          */
         passwordStrengthText() {
-            let strength = this.passwordStrengthValue;
+            let strength = this.passwordStrengthTotalValue;
 
             if (strength < 20) return 'Very weak';
             else if (strength < 30) return 'Weak';
@@ -66,7 +94,7 @@ export default {
          * Password strength bar background color class
          */
         barColorClass() {
-            let strength = this.passwordStrengthValue;
+            let strength = this.passwordStrengthTotalValue;
 
             if (strength < 20) return 'veryWeakBackground';
             else if (strength < 30) return 'weakBackground';

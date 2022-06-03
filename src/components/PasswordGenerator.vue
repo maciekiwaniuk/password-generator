@@ -8,6 +8,7 @@
                 type="number" 
                 @input="saveOptionToLocalStorage('amountOfCharacters', amountOfCharacters); checkAmountOfCharacters();" 
                 v-model="amountOfCharacters"
+                min="0"
             >
         </div>
 
