@@ -2,14 +2,24 @@
     <div class="password-generator">
 
         <div class="row">
-            <label for="amountOfCharacters">Amount</label>
+            <label for="numberOfCharacters">Number</label>
+            <button
+                class="number-button increase-number-button"
+                @click="changeNumberOfCharacters(-1);"
+            >-</button>
+
             <input
-                class="amount-of-characters-text-field"
+                class="number-of-characters-text-field"
                 type="number" 
-                @input="saveOptionToLocalStorage('amountOfCharacters', amountOfCharacters); checkAmountOfCharacters();" 
-                v-model="amountOfCharacters"
+                @input="saveOptionToLocalStorage('numberOfCharacters', numberOfCharacters); checkNumberOfCharacters();" 
+                v-model="numberOfCharacters"
                 min="0"
             >
+
+            <button
+                class="number-button decrease-number-button"
+                @click="changeNumberOfCharacters(1);"
+            >+</button>
         </div>
 
         <div class="row">
@@ -95,7 +105,7 @@ export default {
     },  
     beforeCreate() {
         // Creates and saves default value of options to local storage if values weren't set yet
-        if (localStorage.getItem('amountOfCharacters') === null) localStorage.setItem('amountOfCharacters', 6);
+        if (localStorage.getItem('numberOfCharacters') === null) localStorage.setItem('numberOfCharacters', 6);
         if (localStorage.getItem('symbols') === null) localStorage.setItem('symbols', true);
         if (localStorage.getItem('digits') === null) localStorage.setItem('digits', true);
         if (localStorage.getItem('smallLetters') === null) localStorage.setItem('smallLetters', true);
@@ -104,7 +114,7 @@ export default {
     },
     data() {
         return {
-            amountOfCharacters: localStorage.getItem('amountOfCharacters'),
+            numberOfCharacters: localStorage.getItem('numberOfCharacters'),
             symbols: localStorage.getItem('symbols') == 'true',
             digits: localStorage.getItem('digits') == 'true',
             smallLetters: localStorage.getItem('smallLetters') == 'true',
@@ -114,14 +124,14 @@ export default {
     },
     methods: {
         /**
-         * Checks amount of characters
+         * Checks number of characters
          */
-        checkAmountOfCharacters() {
-            if (this.amountOfCharacters > 1000) {
-                this.amountOfCharacters = 1000
+        checkNumberOfCharacters() {
+            if (this.numberOfCharacters > 1000) {
+                this.numberOfCharacters = 1000
 
                 this.saveOptionToLocalStorage(
-                    'amountOfCharacters',
+                    'numberOfCharacters',
                     1000
                 );
             }
@@ -167,11 +177,17 @@ export default {
             return bigLetters;
         },
         /**
-         * Focuses regenerating password via changing amount of characters
+         * Modifies number of characters
+         */
+        changeNumberOfCharacters(number) {
+            this.numberOfCharacters = parseInt(this.numberOfCharacters) + number;
+        },
+        /**
+         * Focuses regenerating password via changing number of characters
          */
         regeneratePassword() {
-            this.amountOfCharacters -= 1;
-            this.amountOfCharacters += 1;
+            this.numberOfCharacters -= 1;
+            this.numberOfCharacters += 1;
         },
         /**
          * Saves selected option to local storage
@@ -219,7 +235,7 @@ export default {
          * Possibility to generate password from unique characters
          */
         possibilityToGeneratePasswordFromUniqueCharacters() {
-            return this.charactersToGeneratePassword.length >= this.amountOfCharacters
+            return this.charactersToGeneratePassword.length >= this.numberOfCharacters
         },
         /**
          * Final generated password
@@ -228,11 +244,11 @@ export default {
             let password = '',
                 generatedCharacters = 0;
 
-            while (generatedCharacters != this.amountOfCharacters) {
+            while (generatedCharacters != this.numberOfCharacters) {
                 let generatedRandomCharacter = this.charactersToGeneratePassword.charAt(Math.floor(Math.random() * this.charactersToGeneratePassword.length));
 
                 // if (exclude repetitions option is selected) && (password already contains generated character) &&
-                //    (specific amount of characters is possible to generated only from unique characters)
+                //    (specific number of characters is possible to generated only from unique characters)
                 if (this.excludeRepetitions &&
                     password.includes(generatedRandomCharacter) && this.possibilityToGeneratePasswordFromUniqueCharacters) continue;
 
@@ -248,6 +264,11 @@ export default {
 
 <style lang="scss" scoped>
 $disabled-color: rgb(182, 179, 179);
+
+/* Hide arrows inside number input */
+input[type='number'] { -moz-appearance: textfield; }
+input::-webkit-outer-spin-button,
+input::-webkit-inner-spin-button { -webkit-appearance: none; }
 
 .password-generator {
     font-size: 1.6rem;
@@ -341,15 +362,48 @@ $disabled-color: rgb(182, 179, 179);
         cursor: pointer;
     }
     
-    .amount-of-characters-text-field {
-        width: 5rem;
+    .number-of-characters-text-field {
+        width: 4rem;
         height: 1.8rem;
         margin-top: 0.2rem;
-        margin-left: 0.2rem;
         font-size: 1.3rem;
         padding-left: 0.3rem;
-        border-radius: 1rem;
         border: solid black 0.15rem;
+        outline: none;
+    }
+    .number-button {
+        width: 1.5rem;
+        height: 1.8rem;
+        margin: 0;
+        margin-top: 0.2rem;
+        font-weight: 700;
+        font-size: 1rem;
+
+        background-color: white;
+        color: black;
+
+        transition: ease color 0.4s,
+                    ease background-color 0.4s,
+                    ease border 0.4s;
+    }
+    .number-button:hover {
+        cursor: pointer;
+        
+        color: white;
+        background-color: black;
+
+        transition: ease color 0.4s,
+                    ease background-color 0.4s,
+                    ease border 0.4s;
+    }
+    .increase-number-button {
+        border-top-left-radius: 0.5rem;;
+        border-bottom-left-radius: 0.5rem;
+        margin-left: 0.2rem;
+    }
+    .decrease-number-button {
+        border-top-right-radius: 0.5rem;;
+        border-bottom-right-radius: 0.5rem;
     }
 
     .greyedText {
