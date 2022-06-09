@@ -165,10 +165,14 @@ export default {
     justify-content: center;
     font-size: 1.8rem;
     height: 3rem;
-    width: 25rem;
+    width: 20rem;
     background-color: white;
     border-radius: 1rem;
     overflow: hidden;
+
+    @media (min-width: 40rem) {
+        width: 25rem;
+    }
 
     .bar {
         --password-strength: 0;
