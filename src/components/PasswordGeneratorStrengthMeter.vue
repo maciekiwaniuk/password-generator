@@ -15,7 +15,7 @@ export default {
     props: {
         generatedPassword: {
             type: String,
-            validator(value) {
+            validator: function (value) {
                 return value.length < 1001;
             }
         }
@@ -46,20 +46,70 @@ export default {
     },
     computed: {
         /**
-         * Strength of generated password's length
+         * Strength of generated password from length
          */
-        passwordStrengthOfLength() {
+        passwordStrengthFromLength() {
+            // every 4 characters strength increases by 5
             return Math.round((this.generatedPassword.length / 4) * 5);
         },
         /**
-         * Strength of generated password's containing specific characters
+         * Strength of generated password from containing digits
          */
-        passwordStrengthOfContainingSpecificCharacters() {
+        passwordStrengthFromDigits() {
             let strength = 0;
-            if (this.containsDigit(this.generatedPassword)) strength += 5;
-            if (this.containsSymbol(this.generatedPassword)) strength += 5;
-            if (this.containsSmallLetter(this.generatedPassword)) strength += 5;
-            if (this.containsBigLetter(this.generatedPassword)) strength += 5;
+            if (this.containsDigit(this.generatedPassword)) {
+                // every 5 characters when password contains digits
+                // strength increases by 3
+                strength += Math.round((this.generatedPassword.length / 5) * 3)
+            }
+
+            // return strength from containing digits but max value is 20
+            return strength > 20 ? 20 : strength;       
+        },
+        /**
+         * Strength of generated password from containing symbols
+         */
+        passwordStrengthFromSymbols() {
+            let strength = 0;
+            if (this.containsSymbol(this.generatedPassword)) {
+                strength += Math.round((this.generatedPassword.length / 5) * 3)
+            }
+
+            return strength > 20 ? 20 : strength;      
+        },
+        /**
+         * Strength of generated password from containing small letters
+         */
+        passwordStrengthFromSmallLetters() {
+            let strength = 0;
+            if (this.containsSmallLetter(this.generatedPassword)) {
+                strength += Math.round((this.generatedPassword.length / 5) * 3)
+            }
+
+            return strength > 20 ? 20 : strength;      
+        },
+        /**
+         * Strength of generated password from containing big letters
+         */
+        passwordStrengthFromBigLetters() {
+            let strength = 0;
+            if (this.containsBigLetter(this.generatedPassword)) {
+                strength += Math.round((this.generatedPassword.length / 5) * 3)
+            }
+
+            return strength > 20 ? 20 : strength;       
+        },
+        /**
+         * Strength of generated password from containing specific characters
+         */
+        passwordStrengthFromContainingSpecificCharacters() {
+            let strength = 0;
+
+            strength += this.passwordStrengthFromDigits;
+            strength += this.passwordStrengthFromSymbols;
+            strength += this.passwordStrengthFromSmallLetters;
+            strength += this.passwordStrengthFromBigLetters;
+
             return strength;
         },
         /**
@@ -69,8 +119,8 @@ export default {
             let strength = 0,
                 passwordLength = this.generatedPassword.length;
 
-            strength += this.passwordStrengthOfLength;
-            strength += this.passwordStrengthOfContainingSpecificCharacters;
+            strength += this.passwordStrengthFromLength;
+            strength += this.passwordStrengthFromContainingSpecificCharacters;
 
             if (passwordLength >= 8 && this.excludesRepetitions(this.generatedPassword)) strength += 10;
 
@@ -129,7 +179,8 @@ export default {
         height: 4rem;
         width: calc(var(--password-strength) * 1%);
 
-        transition: ease width 0.5s;
+        transition: ease width 0.5s,
+                    ease background-color 0.4s;
     }
 
     .bar-text {

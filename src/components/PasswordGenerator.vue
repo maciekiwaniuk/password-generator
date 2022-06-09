@@ -11,9 +11,10 @@
             <input
                 class="number-of-characters-text-field"
                 type="number" 
-                @input="saveOptionToLocalStorage('numberOfCharacters', numberOfCharacters); checkNumberOfCharacters();" 
                 v-model="numberOfCharacters"
+                @change="validateNumberOfCharacters();"
                 min="0"
+                pattern="\d*"
             >
 
             <button
@@ -27,7 +28,6 @@
             <input 
                 class="checkbox"
                 type="checkbox" 
-                @change="saveOptionToLocalStorage('symbols', symbols);" 
                 v-model="symbols"
             >
         </div>
@@ -37,7 +37,6 @@
             <input 
                 class="checkbox"
                 type="checkbox" 
-                @change="saveOptionToLocalStorage('digits', digits);" 
                 v-model="digits"
             >
         </div>
@@ -47,7 +46,6 @@
             <input 
                 class="checkbox"
                 type="checkbox" 
-                @change="saveOptionToLocalStorage('smallLetters', smallLetters);" 
                 v-model="smallLetters"
             >
         </div>
@@ -57,7 +55,6 @@
             <input 
                 class="checkbox"
                 type="checkbox" 
-                @change="saveOptionToLocalStorage('bigLetters', bigLetters);" 
                 v-model="bigLetters"
             >
         </div>
@@ -68,7 +65,6 @@
                 class="checkbox"
                 type="checkbox" 
                 @click="handleExcludeRepetitionsClick($event);"
-                @change="saveOptionToLocalStorage('excludeRepetitions', excludeRepetitions);" 
                 v-model="excludeRepetitions"
             >
         </div>
@@ -122,19 +118,45 @@ export default {
             excludeRepetitions: localStorage.getItem('excludeRepetitions') == 'true'
         }
     },
+    watch: {
+        numberOfCharacters(value) {
+            // zero or more digits
+            let regex = /\d+/,
+                number = value;
+
+            // if number doesn't contain only digits or is too big
+            if (!regex.test(number) || number > 1000) {
+                number = this.getValidatedNumberOfCharacters(number);
+                this.numberOfCharacters = number;
+            }
+
+            localStorage.setItem('numberOfCharacters', number);
+        },
+        symbols(value) {
+            localStorage.setItem('symbols', value);
+        },
+        digits(value) {
+            localStorage.setItem('digits', value);
+        },
+        smallLetters(value) {
+            localStorage.setItem('smallLetters', value);
+        },
+        bigLetters(value) {
+            localStorage.setItem('bigLetters', value);
+        },
+        excludeRepetitions(value) {
+            localStorage.setItem('excludeRepetitions', value);
+        }
+    },  
     methods: {
         /**
-         * Checks number of characters
+         * Returns validated number of characters
          */
-        checkNumberOfCharacters() {
-            if (this.numberOfCharacters > 1000) {
-                this.numberOfCharacters = 1000
+        getValidatedNumberOfCharacters(numberOfCharacters) {
+            // if number of characters is passed as a string - return last saved value of number
+            if (typeof numberOfCharacters == 'string') return localStorage.getItem('numberOfCharacters')
 
-                this.saveOptionToLocalStorage(
-                    'numberOfCharacters',
-                    1000
-                );
-            }
+            return numberOfCharacters > 1000 ? 1000 : numberOfCharacters;            
         },
         /**
          * Returns symbols as string
@@ -180,6 +202,14 @@ export default {
          * Modifies number of characters
          */
         changeNumberOfCharacters(number) {
+            if (this.numberOfCharacters == 0 && number == -1) return;
+            if (this.numberOfCharacters == 1000 && number == 1) return;
+
+
+            if (this.numberOfCharacters == '') {
+                this.numberOfCharacters = 0;
+                return;
+            }
             this.numberOfCharacters = parseInt(this.numberOfCharacters) + number;
         },
         /**
@@ -188,12 +218,6 @@ export default {
         regeneratePassword() {
             this.numberOfCharacters -= 1;
             this.numberOfCharacters += 1;
-        },
-        /**
-         * Saves selected option to local storage
-         */
-        saveOptionToLocalStorage(name, value) {
-            localStorage.setItem(name, value);
         },
         /**
          * Copies password to clipboard
@@ -265,7 +289,7 @@ export default {
 <style lang="scss" scoped>
 $disabled-color: rgb(182, 179, 179);
 
-/* Hide arrows inside number input */
+/** Hide arrows inside number input **/
 input[type='number'] { -moz-appearance: textfield; }
 input::-webkit-outer-spin-button,
 input::-webkit-inner-spin-button { -webkit-appearance: none; }
@@ -367,8 +391,8 @@ input::-webkit-inner-spin-button { -webkit-appearance: none; }
         height: 1.8rem;
         margin-top: 0.2rem;
         font-size: 1.3rem;
-        padding-left: 0.3rem;
         border: solid black 0.15rem;
+        text-align: center;
         outline: none;
     }
     .number-button {

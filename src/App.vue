@@ -22,12 +22,12 @@ export default {
 <style lang="scss">
 @import url('https://fonts.googleapis.com/css2?family=Montserrat:wght@100;300;700&display=swap');
 
-/** variables **/
+/** Variables **/
 $background-color: black;
 $border-color: white;
 $app-bg-color: rgb(124, 111, 217);
 
-/** set default font-size to 62,5% so 1rem = 10px **/
+/** Set default font-size to 62,5% so 1rem = 10px **/
 * {
     margin: 0;
     padding: 0;
