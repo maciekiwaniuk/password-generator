@@ -329,7 +329,7 @@ input::-webkit-inner-spin-button { -webkit-appearance: none; }
         border-radius: 1rem;
         outline: none;
 
-        border: solid black 0.2rem;;
+        border: solid black 0.2rem;
         background-color: white;
         color: black;
 
@@ -356,7 +356,7 @@ input::-webkit-inner-spin-button { -webkit-appearance: none; }
         font-weight: 700;
         border-radius: 1.5rem;
 
-        border: solid black 0.2rem;;
+        border: solid black 0.2rem;
         background-color: white;
         color: black;
 
@@ -421,12 +421,12 @@ input::-webkit-inner-spin-button { -webkit-appearance: none; }
                     ease border 0.4s;
     }
     .increase-number-button {
-        border-top-left-radius: 0.5rem;;
+        border-top-left-radius: 0.5rem;
         border-bottom-left-radius: 0.5rem;
         margin-left: 0.2rem;
     }
     .decrease-number-button {
-        border-top-right-radius: 0.5rem;;
+        border-top-right-radius: 0.5rem;
         border-bottom-right-radius: 0.5rem;
     }
 
