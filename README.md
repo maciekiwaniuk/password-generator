@@ -1,6 +1,8 @@
 # Password generator
 
 > ### Project of the web application which provides functionalities related to generating passwords.
+> ###
+> ### Online: https://maciekiwaniuk.github.io/password-generator/
 
 - The whole application is made in JavaScript with [Vue 3](https://vuejs.org/).
 
