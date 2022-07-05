@@ -1,20 +1,20 @@
 <template>
-    <TheHeader/>
+    <Header/>
     <PasswordGenerator/>
-    <TheFooter/>
+    <Footer/>
 </template>
 
 <script>
-import TheHeader from '@/components/TheHeader.vue'
+import Header from '@/components/Header.vue'
 import PasswordGenerator from '@/components/PasswordGenerator.vue'
-import TheFooter from '@/components/TheFooter.vue'
+import Footer from '@/components/Footer.vue'
 
 export default {
     name: 'App',
     components: {
-        TheHeader,
+        Header,
         PasswordGenerator,
-        TheFooter
+        Footer
     }
 }
 </script>
@@ -35,7 +35,6 @@ $app-bg-color: rgb(124, 111, 217);
     font-family: 'Montserrat', sans-serif;
     -webkit-font-smoothing: antialiased;
     -moz-osx-font-smoothing: grayscale;
-    font-size: 62,5%;
 }
 
 body {

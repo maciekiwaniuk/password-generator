@@ -259,7 +259,7 @@ export default {
          * Possibility to generate password from unique characters
          */
         possibilityToGeneratePasswordFromUniqueCharacters() {
-            return this.charactersToGeneratePassword.length >= this.numberOfCharacters
+            return this.charactersToGeneratePassword.length >= this.numberOfCharacters;
         },
         /**
          * Final generated password
