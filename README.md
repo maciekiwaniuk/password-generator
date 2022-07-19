@@ -4,7 +4,8 @@
 > ###
 > ### Online: https://maciekiwaniuk.github.io/password-generator/
 
-- The whole application is made in JavaScript with [Vue 3](https://vuejs.org/).
+- Application is made in JavaScript with [Vue 3](https://vuejs.org/) using Options API.
+- Web application is responsive, made with [SCSS](https://sass-lang.com/documentation/syntax).
 
 # Installation
 
