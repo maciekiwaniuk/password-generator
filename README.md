@@ -1,8 +1,6 @@
 # Password generator
 
 > ### Project of the web application which provides functionalities related to generating passwords.
-> ###
-> ### Online: https://maciekiwaniuk.github.io/password-generator/
 
 - Application is made in JavaScript with [Vue 3](https://vuejs.org/) using Options API.
 - Web application is responsive, made with [SCSS](https://sass-lang.com/documentation/syntax).
@@ -27,7 +25,7 @@ Start the local development server
 
     npm run serve
 
-You can now access the server at http://localhost:8080 or http://10.3.10.10:8080
+You can now access the server at http://localhost:8080
 
 # Application appearance
 
